@@ -1,0 +1,59 @@
+import { Outlet } from 'react-router';
+import Navbar from '../../components/Navbar';
+import Sidebar from './Sidebar';
+import { useState } from 'react';
+import { FaBars, FaTimes } from 'react-icons/fa';
+
+const AuthorLayout = () => {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  return (
+    <div className="w-full min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-white">
+      <div className="w-full bg-gray-900 border-b border-gray-700 shadow-lg z-10 relative">
+        <Navbar />
+      </div>
+      {/* Hamburger for mobile */}
+      {!sidebarOpen && (
+        <button
+          className="md:hidden fixed top-5 left-4 z-20 bg-gray-900 p-2 rounded-full shadow-lg border border-gray-700"
+          onClick={() => setSidebarOpen(true)}
+          aria-label="Open sidebar"
+        >
+          <FaBars size={22} />
+        </button>
+      )}
+      {/* Sidebar + Main content layout */}
+      <div className="flex">
+        {/* Sidebar overlay for mobile - reduced z-index */}
+        {sidebarOpen && (
+          <div
+            className="fixed inset-0 bg-black bg-opacity-40 z-10 md:hidden"
+            onClick={() => setSidebarOpen(false)}
+          />
+        )}
+        {/* Sidebar - reduced z-index */}
+        <div
+          className={`fixed top-0 left-0 h-full z-20 transform transition-transform duration-300 md:static md:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}
+        >
+          {/* Cross mark inside sidebar for mobile */}
+          {sidebarOpen && (
+            <button
+              className="md:hidden absolute top-5 right-4 z-10 bg-gray-900 p-2 rounded-full shadow-lg border border-gray-700"
+              onClick={() => setSidebarOpen(false)}
+              aria-label="Close sidebar"
+            >
+              <FaTimes size={22} />
+            </button>
+          )}
+          <Sidebar />
+        </div>
+        {/* Main content */}
+        <div className="flex-1 p-6 md:ml-0">
+          <Outlet />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default AuthorLayout;
