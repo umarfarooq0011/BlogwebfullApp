@@ -6,6 +6,7 @@ import { Newsletter } from '../Models/newsletter.model.js';
 import { sendNewPostEmail } from '../Mails/emails.js';
 import ImageKit from "imagekit";
 import main from "../DB/gemini.js";
+import jwt from "jsonwebtoken";
 
 export const addBlog = async (req, res) => {
   try {
@@ -156,35 +157,51 @@ export const getBlogById = async (req, res) => {
     }
 
     // GET USER ID IF LOGGED IN, ELSE GET IP ADDRESS
-    const userId =  req.user ? req.user._id : null;
-    const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+    let userId = null;
+    const token = req.cookies?.token;
+    const jwtSecret = process.env.JWT_SECRET;
+    if (token && jwtSecret) {
+      try {
+        const decoded = jwt.verify(token, jwtSecret);
+        userId = decoded.UserId;
+      } catch (err) {
+        // Invalid token - treat as unauthenticated viewer
+      }
+    }
+    const ip =
+      req.headers["x-forwarded-for"]?.split(",")[0] ||
+      req.socket?.remoteAddress;
 
-     // Check if this user/IP has viewed in the last 24 hours
-     const now = new Date();
-     const thirtyMinutes = new Date(now.getTime() - 30 *60* 1000); // 30 minutes ago
+    // Check if this user/IP has viewed in the last 30 minutes
+    const now = new Date();
+    const thirtyMinutes = new Date(now.getTime() - 30 * 60 * 1000); // 30 minutes ago
 
     // CHECK IF USER/IP HAS VIEWED THE BLOG
-     let alreadyViewed = false;
-     if(userId){
-      alreadyViewed = blog.viewers.some(v=>v.user && v.user.equals(userId)&&v.viewedAt > thirtyMinutes);
-     } else{
-      alreadyViewed = blog.viewers.some(v=>v.ip === ip && v.viewedAt > thirtyMinutes);
-     }
-     if(!alreadyViewed){
+    let alreadyViewed = false;
+    if (userId) {
+      alreadyViewed = blog.viewers.some(
+        (v) => v.user?.equals(userId) && v.viewedAt > thirtyMinutes
+      );
+    } else {
+      alreadyViewed = blog.viewers.some(
+        (v) => v.ip === ip && v.viewedAt > thirtyMinutes
+      );
+    }
+    if (!alreadyViewed) {
       // Increment views and add viewer
-      blog.views+=1;
+      blog.views += 1;
       blog.viewers.push({
         user: userId,
         ip: userId ? null : ip,
-        viewedAt: now
+        viewedAt: now,
       });
 
       // Remove viewers older than 7 days
       const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-      blog.viewers = blog.viewers.filter(v => v.viewedAt > sevenDaysAgo);
+      blog.viewers = blog.viewers.filter((v) => v.viewedAt > sevenDaysAgo);
 
       await blog.save();
-     }
+    }
 
     return res.status(200).json({
       message: "Blog fetched successfully",

@@ -195,7 +195,7 @@ export const PASSWORD_RESET_SUCCESS_TEMPLATE = (name = "User") => `
 
       <!-- Login Button -->
       <div style="text-align:center; margin:30px 0;">
-        <a href="http://localhost:5173/login" style="display:inline-block; background-color:#3b82f6; color:#ffffff; padding:14px 32px; border-radius:8px; text-decoration:none; font-size:16px; font-weight:600;">
+        <a href="${process.env.NODE_ENV === 'production' ? process.env.FRONTEND_URL : 'http://localhost:5173'}/login" style="display:inline-block; background-color:#3b82f6; color:#ffffff; padding:14px 32px; border-radius:8px; text-decoration:none; font-size:16px; font-weight:600;">
           Go to Login
         </a>
       </div>
@@ -236,6 +236,9 @@ export const getSubscriptionTemplate = () => {
           <p>Thank you for subscribing to the <strong>Bookify</strong> newsletter.</p>
           <p>You're all set to receive the latest news, articles, and updates directly to your inbox.</p>
         </div>
+        <div class="button-container">
+          <a href="${process.env.NODE_ENV === 'production' ? process.env.FRONTEND_URL : 'http://localhost:5173'}" class="button">Visit Website</a>
+        </div>
         <div class="footer">
           <p>&copy; ${new Date().getFullYear()} Bookify. All rights reserved.</p>
         </div>
@@ -247,7 +250,7 @@ export const getSubscriptionTemplate = () => {
 
 // Template for new post notification
 export const getNewPostTemplate = (post) => {
-  const postUrl = `http://localhost:5173/blog/${post._id}`; 
+  const postUrl = `${process.env.NODE_ENV === 'production' ? process.env.FRONTEND_URL : 'http://localhost:5173'}/blog/${post._id}`; 
   
   return `
     <!DOCTYPE html>
@@ -272,9 +275,7 @@ export const getNewPostTemplate = (post) => {
         <img src="${post.thumbnail}" alt="${post.title}" class="thumbnail" />
         <div class="content">
           <p>${post.description}</p>
-        </div>
-        <div class="button-container">
-          <a href="${postUrl}" class="button">Read More</a>
+          <p style="margin-top: 15px; font-style: italic; text-align: center;">Visit our website to read the full article.</p>
         </div>
         <div class="footer">
           <p>You are receiving this email because you subscribed to our newsletter.</p>

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
-import axios from 'axios';
+import axios from '../utils/axiosInstance';
 import { toast } from 'react-toastify';
 
 const ProtectedRoute = () => {
@@ -13,7 +13,7 @@ const ProtectedRoute = () => {
     let isMounted = true;
     const checkAuth = async () => {
       try {
-        const res = await axios.get('/api/check-auth', { withCredentials: true });
+        const res = await axios.get('/check-auth', { withCredentials: true });
         if (isMounted) {
           setAuth(res.data.success);
           if (res.data.success) {

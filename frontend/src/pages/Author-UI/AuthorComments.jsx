@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from '../../utils/axiosInstance';
 import { FaTrash } from 'react-icons/fa';
 
 const AuthorComments = () => {
@@ -43,7 +43,7 @@ const AuthorComments = () => {
         setLoading(true);
         
         // Get current user
-        const userResponse = await axios.get('/api/check-auth');
+        const userResponse = await axios.get('/check-auth');
         if (!userResponse.data?.success || userResponse.data?.user?.role !== 'author') {
           setError('Author access required');
           setLoading(false);
@@ -53,7 +53,7 @@ const AuthorComments = () => {
         setCurrentUser(userResponse.data.user);
         
         // Get comments on author's blogs
-        const commentsResponse = await axios.get('/api/blog/author/comments');
+        const commentsResponse = await axios.get('/blog/author/comments');
         if (commentsResponse.data?.success) {
           setComments(commentsResponse.data.comments || []);
         } else {

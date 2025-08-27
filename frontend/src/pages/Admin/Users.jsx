@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FaBan, FaCheck } from 'react-icons/fa';
-import axios from 'axios';
+import axios from '../../utils/axiosInstance';
 import { toast } from 'react-toastify';
 
 const Users = () => {
@@ -17,7 +17,7 @@ const Users = () => {
   const fetchUsers = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('/api/admin/users', {
+      const response = await axios.get('/admin/users', {
         withCredentials: true
       });
       
@@ -44,7 +44,7 @@ const Users = () => {
     
     setProcessingId(id);
     try {
-      const response = await axios.patch(`/api/admin/users/${id}/toggle-block`, {}, {
+      const response = await axios.patch(`/admin/users/${id}/toggle-block`, {}, {
         withCredentials: true
       });
       

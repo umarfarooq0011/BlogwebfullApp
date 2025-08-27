@@ -10,7 +10,7 @@ import Logo from '/assets/logo.png';
 import { NavLink } from 'react-router-dom';
 import { FaEnvelope, FaLock } from 'react-icons/fa';
 import ClipLoader from 'react-spinners/ClipLoader';
-import axios from 'axios';
+import axiosInstance from '../utils/axiosInstance';
 import { toast } from 'react-toastify';
 
 const SpinningEarth = ({ mouse }) => {
@@ -98,7 +98,7 @@ const ForgetPasswordPage = () => {
     }
     setLoading(true);
     try {
-      const response = await axios.post('/api/forget-password', { email }, { withCredentials: true });
+      const response = await axiosInstance.post('/forget-password', { email });
       if (response.data.success) {
         setSuccess('Password reset link has been sent to your email.');
         toast.success('Password reset link has been sent to your email.', {
@@ -226,4 +226,4 @@ const ForgetPasswordPage = () => {
   );
 };
 
-export default ForgetPasswordPage; 
+export default ForgetPasswordPage;

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import axios from '../../utils/axiosInstance';
 import {
   FaBlog,
   FaComments,
@@ -62,7 +62,7 @@ const AuthorDashboard = () => {
       else setRefreshing(true);
       
       // 1. Get user info
-      const userResponse = await axios.get('/api/check-auth');
+      const userResponse = await axios.get('/check-auth');
       if (!userResponse.data.success) {
         throw new Error('Failed to authenticate');
       }
@@ -70,7 +70,7 @@ const AuthorDashboard = () => {
       const userName = userResponse.data.user?.name || 'Author';
       
       // 2. Get author's blogs
-      const blogsResponse = await axios.get('/api/blog/author/blogs');
+      const blogsResponse = await axios.get('/blog/author/blogs');
       if (!blogsResponse.data.success) {
         throw new Error('Failed to fetch blogs');
       }
@@ -81,7 +81,7 @@ const AuthorDashboard = () => {
       const totalViews = blogs.reduce((sum, blog) => sum + (blog.views || 0), 0);
       
       // 3. Get comments
-      const commentsResponse = await axios.get('/api/blog/author/comments');
+      const commentsResponse = await axios.get('/blog/author/comments');
       const comments = commentsResponse.data.comments || [];
       
       // 4. Create exactly 3 high-priority activities

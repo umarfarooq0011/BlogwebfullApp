@@ -10,7 +10,7 @@ import { Books } from '../components/Books';
 import Logo from '/assets/logo.png';
 import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { FaEnvelope } from 'react-icons/fa';
-import axios from 'axios';
+import axios from '../utils/axiosInstance';
 import { toast } from 'react-toastify';
 import ClipLoader from 'react-spinners/ClipLoader';
 
@@ -98,7 +98,10 @@ const EmailVerificationPage = () => {
     
     // If no email is available, show a message
     if (!emailToUse) {
-      setResendError('No email found. Please go back and sign up again.');
+      setError('Email not found. Please return to the signup page.');
+      toast.error('Could not find your email. Please sign up again.');
+    } else {
+        inputsRef.current[0]?.focus();
     }
   }, [location.search]);
 
@@ -148,8 +151,8 @@ const EmailVerificationPage = () => {
   const handleSubmit = async (e) => {
     if (e) e.preventDefault();
     const verificationCode = code.join('');
-    if (verificationCode.length !== OTP_LENGTH) {
-      setError('Please enter the full verification code.');
+    if (verificationCode.length !== OTP_LENGTH ||!userEmail ) {
+      setError('Please enter the complete 6-digit code.');
       return;
     }
     if (!userEmail) {
@@ -157,28 +160,24 @@ const EmailVerificationPage = () => {
       return;
     }
     setLoading(true);
-    try {
-      // Use the correct endpoint from your backend routes
-      const res = await axios.post('/api/verify-email', { 
-        code: verificationCode,
-        email: userEmail 
-      }, { withCredentials: true });
+    setError('');
+     try {
+      const res = await axios.post('/verify-email', { code: verificationCode, email: userEmail });
       if (res.data.success) {
-        toast.success('Email verified successfully! Check your inbox for the welcome email with a link to your dashboard.', {
+        toast.success('✅ Email verified! Redirecting to login...', {
+          autoClose: 2000,
           onClose: () => {
-            // Clear the stored email after successful verification
             localStorage.removeItem('verificationEmail');
             navigate('/login');
           },
-          autoClose: 2000,
         });
-      } else {
-        toast.error(res.data.message || 'Verification failed.');
       }
     } catch (err) {
       const msg = err.response?.data?.message || 'Verification failed. Please try again.';
-      toast.error(msg);
       setError(msg);
+      toast.error(msg);
+      setCode(Array(OTP_LENGTH).fill(''));
+      inputsRef.current[0]?.focus();
     } finally {
       setLoading(false);
     }
@@ -186,33 +185,26 @@ const EmailVerificationPage = () => {
 
   // Auto-submit when all fields are filled
   useEffect(() => {
-    if (code.every(val => val.length === 1)) {
+    if (code.every(c => c) && code.join('').length === OTP_LENGTH) {
       handleSubmit();
     }
-  }, [code]); 
+  }, [code]);
 
-  const handleResend = async () => {
-    setResendMsg('');
-    setResendError('');
+   const handleResend = async () => {
     if (!userEmail) {
-      setResendError('No email found. Please go back and enter your email again.');
+      setResendError('Email address not found.');
       return;
     }
     setResendLoading(true);
+    setResendError('');
+    setResendMsg('');
     try {
-      // Use the correct endpoint from your backend routes
-      const res = await axios.post('/api/resend-verification-email', { email: userEmail });
-      if (res.data.success) {
-        setResendMsg('Verification email resent! Please check your inbox.');
-        toast.success('Verification email resent!');
-      } else {
-        setResendError(res.data.message || 'Failed to resend email.');
-        toast.error(res.data.message || 'Failed to resend email.');
-      }
+      await axios.post('/api/resend-verification-email', { email: userEmail });
+      setResendMsg('A new verification code has been sent.');
+      setCode(Array(OTP_LENGTH).fill(''));
+      inputsRef.current[0]?.focus();
     } catch (err) {
-      const errorMsg = err.response?.data?.message || 'Failed to resend email.';
-      setResendError(errorMsg);
-      toast.error(errorMsg);
+      setResendError(err.response?.data?.message || 'Failed to resend email.');
     } finally {
       setResendLoading(false);
     }

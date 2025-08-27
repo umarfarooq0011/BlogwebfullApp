@@ -10,7 +10,7 @@ import Logo from '/assets/logo.png';
 import { NavLink, useParams, useNavigate } from 'react-router-dom';
 import { FaLock, FaEye, FaEyeSlash } from 'react-icons/fa';
 import ClipLoader from 'react-spinners/ClipLoader';
-import axios from 'axios';
+import axiosInstance from '../utils/axiosInstance';
 import { toast } from 'react-toastify';
 
 const SpinningEarth = ({ mouse }) => {
@@ -117,7 +117,7 @@ const ResetPasswordPage = () => {
     }
     setLoading(true);
     try {
-      const res = await axios.post(`/api/reset-password/${token}`, { password: form.password }, { withCredentials: true });
+      const res = await axiosInstance.post(`/reset-password/${token}`, { password: form.password });
       if (res.data.success) {
         setSuccess('Your password has been reset successfully!');
         toast.success('Your password has been reset successfully! You can now login with your new password.', {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FaTrash, FaEnvelope } from 'react-icons/fa';
-import axios from 'axios';
+import axios from '../../utils/axiosInstance';
 
 const NewsletterManage = () => {
   const [subscribers, setSubscribers] = useState([]);
@@ -18,7 +18,7 @@ const NewsletterManage = () => {
   const fetchSubscribers = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('/api/newsletter/admin/subscribers', { withCredentials: true });
+      const response = await axios.get('/newsletter/admin/subscribers', { withCredentials: true });
       if (response.data.success) {
         setSubscribers(response.data.subscribers);
       } else {
@@ -38,7 +38,7 @@ const NewsletterManage = () => {
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to remove this subscriber?')) {
       try {
-        const response = await axios.delete(`/api/newsletter/admin/subscribers/${id}`, { withCredentials: true });
+        const response = await axios.delete(`/newsletter/admin/subscribers/${id}`, { withCredentials: true });
         if (response.data.success) {
           setSubscribers(subscribers.filter((sub) => sub._id !== id));
         } else {
