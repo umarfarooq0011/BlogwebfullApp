@@ -98,8 +98,11 @@ export const verifyEmail = async (req, res) => {
     user.verificationToken = undefined;
     user.verificationTokenExpiresAt = undefined;
     await user.save();
-
-    await sendWelcomeEmail(user.email, user.name);
+    try {
+      await sendWelcomeEmail(user.email, user.name);
+    } catch (emailError) {
+      console.error("Welcome email error:", emailError.message);
+    }
 
     return res.status(200).json({
       success: true,
@@ -252,7 +255,14 @@ export const forgetPassword = async (req, res) => {
     await user.save();
 
     const resetUrl = `${process.env.CLIENT_URL}/reset-password/${resetToken}`;
-    await sendPasswordResetEmail(user.email, resetUrl);
+    try {
+      await sendPasswordResetEmail(user.email, resetUrl);
+    } catch (emailError) {
+      console.error(
+        "Password reset email error:",
+        emailError.message
+      );
+    }
 
     return res.status(200).json({
       success: true,
@@ -313,7 +323,14 @@ export const ResetPassword = async (req, res) => {
     userToUpdate.resetPasswordExpiresAt = undefined;
 
     await userToUpdate.save();
-    await sendResetSuccessEmail(userToUpdate.email, userToUpdate.name);
+    try {
+      await sendResetSuccessEmail(userToUpdate.email, userToUpdate.name);
+    } catch (emailError) {
+      console.error(
+        "Reset success email error:",
+        emailError.message
+      );
+    }
 
     return res
       .status(200)
