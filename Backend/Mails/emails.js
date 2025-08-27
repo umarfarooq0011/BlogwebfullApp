@@ -46,18 +46,22 @@ export const sendWelcomeEmail = async (email, name="User") => {
     "../../frontend/public/assets/logo.png"
   );
 
+  const attachments = fs.existsSync(logoPath)
+    ? [
+        {
+          filename: "logo.png",
+          path: logoPath,
+          cid: "logo", // Content ID referenced in the HTML
+        },
+      ]
+    : [];
+
   const mailOptions = {
     from: `"InsightSphere" <${process.env.GMAIL_USER} >`,
     to: email,
     subject: "Welcome to InsightSphere",
     html: WELCOME_EMAIL_TEMPLATE(name),
-    attachments: [
-      {
-        filename: "logo.png",
-        path: logoPath,
-        cid: "logo", // Content ID referenced in the HTML
-      },
-    ],
+    attachments,
   };
 
   try {
@@ -76,19 +80,23 @@ export const sendPasswordResetEmail = async (email, resetLink) => {
     __dirname,
     "../../frontend/public/assets/logo.png"
   );
-  
+
+  const attachments = fs.existsSync(logoPath)
+    ? [
+        {
+          filename: "logo.png",
+          path: logoPath,
+          cid: "logo", // Content ID referenced in the HTML
+        },
+      ]
+    : [];
+
   const mailOptions = {
     from: `"InsightSphere" <${process.env.GMAIL_USER} >`,
     to: email,
     subject: "Password Reset Request",
     html: PASSWORD_RESET_REQUEST_TEMPLATE(resetLink),
-    attachments: [
-      {
-        filename: "logo.png",
-        path: logoPath,
-        cid: "logo", // Content ID referenced in the HTML
-      },
-    ],
+    attachments,
   }
 
   try {
@@ -106,18 +114,22 @@ export const sendResetSuccessEmail = async (email, name= "User") => {
     __dirname,
     "../../frontend/public/assets/logo.png"
   );
+  const attachments = fs.existsSync(logoPath)
+    ? [
+        {
+          filename: "logo.png",
+          path: logoPath,
+          cid: "logo", // Content ID referenced in the HTML
+        },
+      ]
+    : [];
+
   const mailOptions = {
     from: `"InsightSphere" <${process.env.GMAIL_USER} >`,
     to: email,
     subject: "Password Reset Success",
     html: PASSWORD_RESET_SUCCESS_TEMPLATE(name),
-    attachments: [
-      {
-        filename: "logo.png",
-        path: logoPath,
-        cid: "logo", // Content ID referenced in the HTML
-      },
-    ],
+    attachments,
   }
 
   try {
