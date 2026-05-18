@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon Backend/index.js",
-    "start": "nodemon Backend/index.js"
+    "start": "node Backend/index.js",
+    "vercel-build": "cd ../frontend && npm install && npm run build"
   },
   "keywords": [],
   "author": "",
