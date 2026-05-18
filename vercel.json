@@ -1,0 +1,17 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "builds": [
+    {
+      "src": "Backend/index.js",
+      "use": "@vercel/node",
+      "config": {
+        "includeFiles": "Backend/dist/**"
+      }
+    },
+    {
+      "src": "Backend/dist/**",
+      "use": "@vercel/static"
+    }
+  ],
+  "rewrites": [{ "source": "/(.*)", "destination": "/Backend/index.js" }]
+}
