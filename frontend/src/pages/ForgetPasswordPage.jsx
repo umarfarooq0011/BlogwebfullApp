@@ -6,7 +6,6 @@ import ThreeSpace from '../components/ThreeSpace';
 import CanvasLoader from '../components/CanvasLoader';
 import { Earth } from '../components/Earth';
 import { Books } from '../components/Books';
-import Logo from '/assets/logo.png';
 import { NavLink } from 'react-router-dom';
 import { FaEnvelope, FaLock } from 'react-icons/fa';
 import ClipLoader from 'react-spinners/ClipLoader';
@@ -146,12 +145,12 @@ const ForgetPasswordPage = () => {
       </div>
       
       {/* Logo at the top */}
-      <div className="flex justify-between">
+      <div className="flex justify-between p-4">
         <NavLink
           to="/"
-          className="focus:outline-none"
+          className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-purple-500 to-blue-500 bg-clip-text text-transparent"
         >
-          <img src={Logo} alt="logo" className="w-32 h-32 cursor-pointer" />
+          BlogWeb
         </NavLink>
       </div>
       

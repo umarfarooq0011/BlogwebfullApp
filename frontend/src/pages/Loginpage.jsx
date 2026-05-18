@@ -5,7 +5,6 @@ import ThreeSpace from '../components/ThreeSpace';
 import CanvasLoader from '../components/CanvasLoader';
 import { Earth } from '../components/Earth';
 import { Books } from '../components/Books';
-import Logo from '/assets/logo.png';
 import LoginForm from '../components/LoginForm';
 import { NavLink } from 'react-router';
 
@@ -98,12 +97,12 @@ const Loginpage = () => {
       </div>
      {/* Logo at the top */}
      {/* Logo at the top */}
-     <div className="flex justify-between">
+     <div className="flex justify-between p-4">
         <NavLink
-          to="/"  // Use NavLink to navigate to the Landing Page
-          className="focus:outline-none"
+          to="/"
+          className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-purple-500 to-blue-500 bg-clip-text text-transparent"
         >
-          <img src={Logo} alt="logo" className="w-32 h-32 cursor-pointer" />
+          BlogWeb
         </NavLink>
       </div>
       {/* Login Form Overlay */}
