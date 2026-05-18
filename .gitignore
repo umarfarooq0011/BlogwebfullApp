@@ -13,6 +13,9 @@ frontend/dist/
 # Vercel
 .vercel/
 
+# Claude Code (user-specific settings)
+.claude/settings.local.json
+
 # Logs
 *.log
 npm-debug.log*
