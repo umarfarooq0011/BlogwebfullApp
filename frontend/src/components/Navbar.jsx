@@ -1,5 +1,4 @@
 import { useNavigate } from 'react-router';
-import Logo from '/assets/logo.png'; 
 import { FaSignOutAlt, FaUserCircle, FaEnvelope, FaTachometerAlt, FaTrashAlt } from 'react-icons/fa';
 import axios from 'axios';
 import { toast } from 'react-toastify';
@@ -124,7 +123,12 @@ const Navbar = () => {
 
     return (
         <div className="flex justify-between items-center mx-2 sm:mx-20 xl:mx-32 py-4 z-10">
-            <img src={Logo} alt="logo" className="w-32 sm:w-44 cursor-pointer" onClick={() => navigate('/blog')} />
+            <div
+                onClick={() => navigate('/blog')}
+                className="text-2xl sm:text-3xl font-bold cursor-pointer bg-gradient-to-r from-purple-500 to-blue-500 bg-clip-text text-transparent"
+            >
+                BlogWeb
+            </div>
             
             <div className="flex items-center gap-3">
                 {isLoading && (

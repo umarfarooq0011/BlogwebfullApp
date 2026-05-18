@@ -8,7 +8,7 @@ const Footer = () => {
 
         <div>
           <div className="mb-4">
-            <img src="/assets/logo.png" alt="Insight Sphere Logo" className="h-35 w-35" />
+            <span className="text-3xl font-bold bg-gradient-to-r from-purple-500 to-blue-500 bg-clip-text text-transparent">BlogWeb</span>
           </div>
           <p className="text-sm leading-relaxed text-slate-400">
             Insight Sphere empowers every thought with voice. AI-driven blogging for creators, thinkers, and storytellers.

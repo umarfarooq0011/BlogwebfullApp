@@ -47,11 +47,12 @@ app.get("*", (req, res) => {
 connectDB().then(() => {
     seedAdminUser();
     console.log("Database connected successfully");
-    // Start the server
-    // app.listen(process.env.PORT || 5000, () => {
-    //     console.log(`Server is running on port ${process.env.PORT || 8000}`);
-    // });
+    // Only bind a port outside of Vercel's serverless environment.
+    if (process.env.NODE_ENV !== "production") {
+        app.listen(process.env.PORT || 8080, () => {
+            console.log(`Server is running on port ${process.env.PORT || 8080}`);
+        });
+    }
 });
 // --- Export the app for Vercel ---
-// We DO NOT use app.listen()
 export default app;
